@@ -9,6 +9,7 @@ import {
 import { Button, Grid } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import { useState } from "react";
+import Bookings from "../Bookings/Bookings";
 
 const Book = () => {
   const { bedType } = useParams();
@@ -31,7 +32,17 @@ const Book = () => {
   };
 
   const handleBooking = () => {
-      
+      const newBooking = {...loggedInUser, ...selectedDate};
+      fetch('http://localhost:5000/addBooking', {
+          method: 'POST',
+          headers: {'Content-type': 'application/json'},
+          body: JSON.stringify(newBooking)
+      })
+      .then(res => res.json())
+      .then(data => {
+          if(data) {console.log('data inserted to database'); }
+      })
+
   }
 
   return (
@@ -72,6 +83,7 @@ const Book = () => {
         </Grid>
         <Button onClick = {handleBooking} variant="contained" color="primary">Book Now</Button>
       </MuiPickersUtilsProvider>
+      <Bookings></Bookings>
     </div>
   );
 };
